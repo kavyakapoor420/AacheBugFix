@@ -167,7 +167,12 @@ class DataflowMetrics extends MetricResults {
         // stringset metric
         StringSetResult value = getStringSetValue(committed);
         stringSetResults.add(MetricResult.create(metricKey, !isStreamingJob, value));
-      } else {
+      } else if (committed.getGauge() != null && attempted.getGauge() != null) {
+        // gauge metric
+        GaugeResult value = getGaugeValue(committed);
+        gaugeResults.add(MetricResult.create(metricKey, !isStreamingJob, value));
+      }
+        else {
         // This is exceptionally unexpected. We expect matching user metrics to only have the
         // value types provided by the Metrics API.
         LOG.warn(
